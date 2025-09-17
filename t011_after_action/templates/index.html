@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>After-Action Compressor</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f4f6f8;
+        color: #1f2933;
+      }
+      header {
+        background: #111827;
+        color: #f9fafb;
+        padding: 1.5rem 2rem;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.9rem;
+      }
+      .banner {
+        background: #fde68a;
+        border: 1px solid #f59e0b;
+        color: #92400e;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+      form {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+        margin-bottom: 2rem;
+      }
+      textarea {
+        width: 100%;
+        min-height: 180px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        resize: vertical;
+      }
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+      }
+      button {
+        background: #2563eb;
+        color: #ffffff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #1d4ed8;
+      }
+      .error {
+        color: #b91c1c;
+        font-weight: 600;
+        margin-top: 0.75rem;
+      }
+      .results {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+      }
+      h2 {
+        margin-top: 0;
+      }
+      ol,
+      ul {
+        padding-left: 1.25rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .sections {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+      }
+      .card {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        border: 1px solid #e5e7eb;
+      }
+      .card h3 {
+        margin-top: 0;
+        font-size: 1.1rem;
+      }
+      .single-line {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>T‑011 — After‑Action Compressor</h1>
+      <p>Baseline compressor: deterministic heuristics for insights, deltas, and lessons.</p>
+    </header>
+    <main>
+      <div class="banner">Don’t paste PII/regulated data.</div>
+      <form method="post" action="{{ url_for('compress') }}">
+        <label for="notes">Transcript or notes</label>
+        <textarea id="notes" name="notes" maxlength="8000">{{ text }}</textarea>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <div class="actions">
+          <button type="submit">Compress</button>
+        </div>
+      </form>
+      <section class="results">
+        <h2>Captured learning</h2>
+        <div class="sections">
+          <div class="card">
+            <h3>5 insights</h3>
+            <ol>
+              {% for line in results.insights %}
+              <li>{{ line }}</li>
+              {% endfor %}
+            </ol>
+          </div>
+          <div class="card">
+            <h3>3 deltas</h3>
+            <ol>
+              {% for line in results.deltas %}
+              <li>{{ line }}</li>
+              {% endfor %}
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Irreversible lesson</h3>
+            <p class="single-line">{{ results.lesson }}</p>
+          </div>
+          <div class="card">
+            <h3>System tweak</h3>
+            <p class="single-line">{{ results.system_tweak }}</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
